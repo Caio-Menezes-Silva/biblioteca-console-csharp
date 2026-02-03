@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace biblioteca_console_csharp.Models
+namespace biblioteca_console_csharp.Books_management.Models
 {
     public class Book
     {
@@ -14,7 +14,7 @@ namespace biblioteca_console_csharp.Models
         private int _publYear;
         private string _author;
         private string _isbn;
-        private int _quantityInStock = 0;
+        private int _quantityInStock;
         protected bool validation;
 
         public Book() { }
@@ -24,37 +24,9 @@ namespace biblioteca_console_csharp.Models
             PublYear = publYear;
             Author = author;
             Isbn = isbn;
+            QuantityInStock = quantityInStock;
         }
-        public bool Registration()
-        {
-            try
-            {
-                Console.Write("Type the book's name: ");
-                Title = Console.ReadLine(); // Property já valida automaticamente!
 
-                Console.Write("Type the publication year: ");
-                PublYear = int.Parse(Console.ReadLine()); // Property valida!
-
-                Console.Write("Type the author: ");
-                Author = Console.ReadLine(); // Property valida!
-
-                Console.Write("Type the ISBN number (13 digits): ");
-                Isbn = Console.ReadLine(); // Property valida!
-                Console.WriteLine("The book has been added to the library");
-
-                return true;// Se chegou aqui, tudo foi validado!
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine($"\nError: {ex.Message}");
-                return false;
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("\nInvalid input format!");
-                return false;
-            }
-        }
         public string Title
         {
             get { return _title; }
@@ -72,7 +44,7 @@ namespace biblioteca_console_csharp.Models
             set
             {
                 if (value <= 0)
-                    throw new ArgumentException("Publication year must be a positive integer");
+                    throw new ArgumentException("Publication year must be a positive");
                 _publYear = value;
             }
         }
@@ -95,19 +67,92 @@ namespace biblioteca_console_csharp.Models
                 else
                 {
                     _isbn = value;
-                    validation = true;
                 }
 
             }
         }
+        public int QuantityInStock
+        {
+            get { return _quantityInStock; }
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Quantity in stock cannot be negative");
+                _quantityInStock = value;
 
-        public int QuantityInStock { get; set; } = 0;
+            }
+        }
+
+        public bool Registration()
+        {
+            try
+            {
+
+                Console.Write("Type the book's name: ");
+                Title = Console.ReadLine();
+                Console.WriteLine();
+
+                Console.Write("Type the publication year: ");
+                PublYear = int.Parse(Console.ReadLine());
+                Console.WriteLine();
+
+                Console.Write("Type the author: ");
+                Author = Console.ReadLine();
+                Console.WriteLine();
+
+                Console.Write("Type the ISBN number (13 digits): ");
+                Isbn = Console.ReadLine();
+                Console.WriteLine();
+
+                Console.Write("How many books will be added at stock? ");
+                QuantityInStock = int.Parse(Console.ReadLine());
+                Console.WriteLine();
+
+                Console.WriteLine("The book has been added to the library");
+
+                return true;
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"\nError: {ex.Message}");
+                return false;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\nInvalid input format!");
+                return false;
+            }
+        }
+
+        public bool EstaDisponivel()
+        {
+            return _quantityInStock > 0;
+        }
+        public bool Emprestar()
+        {
+            if (_quantityInStock > 0)
+            {
+                _quantityInStock--;
+                return true;
+            }
+            return false;
+        }
+
+        public void Devolver()
+        {
+            _quantityInStock++;
+        }
 
 
 
         public override string ToString()
         {
-            return $"Title: {Title},\nPublication Year: {PublYear},\nAuthor: {Author},\nISBN: {Isbn},\nQuantity in Stock: {QuantityInStock}";
+            return $"Title: {_title}\n" +
+                   $"Author: {_author}\n" +
+                   $"Year: {_publYear}\n" +
+                   $"ISBN: {_isbn}\n" +
+                   $"Stock: {_quantityInStock}\n" +
+                   $"Available: {(EstaDisponivel() ? "Yes" : "No")}";
         }
     }
 }

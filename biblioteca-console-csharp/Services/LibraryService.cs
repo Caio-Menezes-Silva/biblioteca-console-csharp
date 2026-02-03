@@ -1,75 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using biblioteca_console_csharp.Models;
 
-namespace biblioteca_console_csharp.Services.Models
+
+namespace biblioteca_console_csharp.Books_management.Models
 {
     public class LibraryService
     {
-        // Lista para armazenar todos os livros
         private List<Book> _books;
+        public LibraryService() { _books = new List<Book>(); }
 
-        // Construtor inicializa a lista vazia
-        public LibraryService()
-        {
-            _books = new List<Book>();
-        }
-
-        // Adicionar livro à biblioteca
-        public void AdicionarLivro(Book livro)
+        public void AddBook(Book livro)
         {
             _books.Add(livro);
-            Console.WriteLine("Livro adicionado com sucesso!");
+            Console.WriteLine("Book added successfully!");
         }
 
         // Listar todos os livros
-        public void ListarTodosLivros()
+        public void ListAllBooks()
         {
             if (_books.Count == 0)
             {
-                Console.WriteLine("Nenhum livro cadastrado.");
+                Console.WriteLine("No books registered yet.");
                 return;
             }
 
-            Console.WriteLine("\n=== LISTA DE LIVROS ===");
+            Console.WriteLine("\n=== LIBRARY BOOKS ===");
             for (int i = 0; i < _books.Count; i++)
             {
-                Console.WriteLine($"\n--- Livro {i + 1} ---");
+                Console.WriteLine($"\n--- Book {i + 1} ---");
                 Console.WriteLine(_books[i]);
             }
         }
 
-        // Buscar livro por título
-        public Book BuscarPorTitulo(string titulo)
+        public Book FindByTitle(string titulo)
         {
             return _books.FirstOrDefault(l => l.Title.ToLower().Contains(titulo.ToLower()));
         }
 
-        // Buscar livro por ISBN
-        public Book BuscarPorIsbn(string isbn)
+        public Book FindByIsbn(string isbn)
         {
             return _books.FirstOrDefault(l => l.Isbn == isbn);
         }
 
-        // Remover livro
-        public bool RemoverLivro(string isbn)
+        public bool RemoveBook(string isbn)
         {
-            Book livro = BuscarPorIsbn(isbn);
+            Book livro = FindByIsbn(isbn);
             if (livro != null)
             {
                 _books.Remove(livro);
-                Console.WriteLine("Livro removido com sucesso!");
+                Console.WriteLine("Book removed from the list!");
                 return true;
             }
-            Console.WriteLine("Livro não encontrado.");
+            Console.WriteLine("Book not found.");
             return false;
         }
+        public int ShowBooksAtTotal() { return _books.Count; }
 
-        // Obter quantidade de livros
-        public int ObterTotalLivros()
-        {
-            return _books.Count;
-        }
+        public List<Book> ObtainAvailableBooks(){ return _books.Where(l => l.EstaDisponivel()).ToList(); }
     }
 }
