@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using biblioteca_console_csharp.Models;
 
 
-namespace biblioteca_console_csharp.Books_management.Models
+namespace biblioteca_console_csharp.Books_management.Models.UI
 {
     public class LibraryService
     {
         private List<Book> _books;
         public LibraryService() { _books = new List<Book>(); }
 
-        public void AddBook(Book livro)
+        public void AddBook(Book book)
         {
-            _books.Add(livro);
+            if (book == null)
+            {
+                throw new ArgumentNullException("Book cannot be null");
+            }
+            _books.Add(book);
             Console.WriteLine("Book added successfully!");
         }
 
@@ -33,9 +38,9 @@ namespace biblioteca_console_csharp.Books_management.Models
             }
         }
 
-        public Book FindByTitle(string titulo)
+        public Book FindByTitle(string title)
         {
-            return _books.FirstOrDefault(l => l.Title.ToLower().Contains(titulo.ToLower()));
+            return _books.FirstOrDefault(l => l.Title.ToLower().Contains(title.ToLower()));
         }
 
         public Book FindByIsbn(string isbn)
@@ -45,18 +50,38 @@ namespace biblioteca_console_csharp.Books_management.Models
 
         public bool RemoveBook(string isbn)
         {
-            Book livro = FindByIsbn(isbn);
-            if (livro != null)
+            Book book = FindByIsbn(isbn);
+            if (book != null)
             {
-                _books.Remove(livro);
+                _books.Remove(book);
                 Console.WriteLine("Book removed from the list!");
                 return true;
             }
             Console.WriteLine("Book not found.");
             return false;
         }
-        public int ShowBooksAtTotal() { return _books.Count; }
+        public int ShowAllBooks()
+        {
 
-        public List<Book> ObtainAvailableBooks(){ return _books.Where(l => l.EstaDisponivel()).ToList(); }
+            if (_books.Count == 0) { throw new ArgumentNullException("The list is empty"); }
+            return _books.Count;
+        }
+
+        public bool Loan(Book _books)
+        {
+            if (_books.QuantityInStock > 0)
+            {
+                _books.QuantityInStock--;
+                return true;
+            }
+            return false;
+        }
+
+        public void Bring(Book _books)
+        {
+            _books.QuantityInStock++;
+        }
+
+        public List<Book> ObtainAvailableBooks() { return _books.Where(l => l.IsAvailable()).ToList(); }
     }
 }
