@@ -12,41 +12,51 @@ namespace biblioteca_console_csharp.Books_management.Models.UI
     {
         static void Main(string[] args)
         {
+            BookUI bookUI = new BookUI();
+            LibraryService LS = new LibraryService();
             int option = -1;
+
             Console.WriteLine("||Welcome to the Library Management System!||");
             Console.WriteLine();
-            Console.WriteLine("Select the menu option: ");
-            try
+            do
             {
-                Console.WriteLine("1 - Register a book;" +
-                                "\n2 - List all books;" +
-                                "\n3 - Find book by title;" +
-                                "\n4 - Find book by ISBN;" +
-                                "\n5 - Show available books;" +
-                                "\n6 - Close app");
-                do
+                try
                 {
+
+
+                    Console.WriteLine();
+                    Console.WriteLine("1 - Register a book;" +
+                                    "\n2 - List all books;" +
+                                    "\n3 - Find book by title;" +
+                                    "\n4 - Find book by ISBN;" +
+                                    "\n5 - Show available books;" +
+                                    "\n6 - Close app");
+                    Console.Write("Select the menu option: ");
                     option = int.Parse(Console.ReadLine());
+
+
+
+
                     switch (option)
                     {
                         case 1:
+                            Book book = bookUI.Registration();
+
+                            if (book != null)
+                            {
+                                LS.AddBook(book);
+                            }
 
                             break;
 
                         case 2:
-
+                            LS.ListAllBooks();
                             break;
                     }
 
-                } while (option != 6);
-            }
-            catch (Exception ex) { Console.WriteLine("Invalid option, try again"); }
-
+                }
+                catch (Exception ex) { Console.WriteLine("Invalid option, try again"); }
+            } while (option != 6);
         }
-
-
-
-
-
     }
 }

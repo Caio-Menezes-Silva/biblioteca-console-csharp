@@ -6,11 +6,12 @@ namespace biblioteca_console_csharp.UI
 {
     public class BookUI
     {
-        public bool Registration()
+        public Book Registration()
         {
             try
             {
                 Book book = new Book();
+
                 Console.Write("Type the book's name: ");
                 book.Title = Console.ReadLine();
                 Console.WriteLine();
@@ -33,17 +34,17 @@ namespace biblioteca_console_csharp.UI
 
                 Console.WriteLine("The book has been added to the library");
 
-                return true;
+                return book;
             }
             catch (ArgumentException ex)
             {
                 Console.WriteLine($"\nError: {ex.Message}");
-                return false;
+                return null;
             }
             catch (FormatException)
             {
                 Console.WriteLine("\nInvalid input format!");
-                return false;
+                return null;
             }
         }
 
