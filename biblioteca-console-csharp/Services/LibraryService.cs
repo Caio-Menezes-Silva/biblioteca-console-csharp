@@ -40,7 +40,8 @@ namespace biblioteca_console_csharp.Books_management.Models.UI
 
         public Book FindByTitle(string title)
         {
-            return _books.FirstOrDefault(l => l.Title.ToLower().Contains(title.ToLower()));
+            return _books.FirstOrDefault(l =>
+                l.Title.ToLower().Contains(title.ToLower()));
         }
 
         public Book FindByIsbn(string isbn)
@@ -60,27 +61,55 @@ namespace biblioteca_console_csharp.Books_management.Models.UI
             Console.WriteLine("Book not found.");
             return false;
         }
-        public int ShowAllBooks()
-        {
 
-            if (_books.Count == 0) { throw new ArgumentNullException("The list is empty"); }
-            return _books.Count;
+        public bool LoanBook(string isbn)
+        {
+            Book book = FindByIsbn(isbn);
+            if (book == null)
+            {
+                Console.WriteLine("Book not found");
+                return false;
+            }
+            return book.BorrowBook();
         }
 
-        public bool Loan(Book _books)
+        public bool ReturnoBook(string isbn)
         {
-            if (_books.QuantityInStock > 0)
+            Book book = FindByIsbn(isbn);
+
+            if (book == null)
             {
-                _books.QuantityInStock--;
+                Console.WriteLine("Book not found");
+                return false;
+            }
+            book.ReturnBook();
+            return true;
+        }
+
+        public bool UpdateBookStock(string isbn, int newQuantity)
+        {
+            Book book = FindByIsbn(isbn);
+            if (book == null)
+            {
+                Console.WriteLine("Book not found");
+                return false;
+            }
+
+            try 
+            {
+                book.UpdateStock(newQuantity);
+                Console.WriteLine("Book stock updated successfully!");
                 return true;
             }
-            return false;
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
 
-        public void Bring(Book _books)
-        {
-            _books.QuantityInStock++;
-        }
+        public int GetTotalBooksCount() { return _books.Count; }
+
 
         public List<Book> ObtainAvailableBooks() { return _books.Where(l => l.IsAvailable()).ToList(); }
     }
