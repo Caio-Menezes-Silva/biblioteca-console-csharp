@@ -31,6 +31,7 @@ namespace biblioteca_console_csharp.UI
                 Console.Write("Role (Admin/User): ");
                 string role = Console.ReadLine();
 
+                // ✅ VALIDA ANTES de criar o usuário
                 if (string.IsNullOrWhiteSpace(firstName) ||
                     string.IsNullOrWhiteSpace(lastName) ||
                     string.IsNullOrWhiteSpace(email) ||
