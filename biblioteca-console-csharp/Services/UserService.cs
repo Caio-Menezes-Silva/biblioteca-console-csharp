@@ -15,6 +15,7 @@ namespace biblioteca_console_csharp.Services
 
         public void AddUser(User user)
         {
+
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user), "User cannot be null");
@@ -37,6 +38,33 @@ namespace biblioteca_console_csharp.Services
             _users.Add(userWithId);
 
             Console.WriteLine($"User added to system! ID: {newId}");
+
+            bool UserRegistration()
+            {
+                User user = new User();
+                Console.WriteLine("=== USER REGISTRATION ===");
+                Console.Write("First Name: ");
+                user.FirstName = Console.ReadLine();
+                Console.Write("Last Name: ");
+                user.LastName = Console.ReadLine();
+                Console.Write("Email: ");
+                user.Email = Console.ReadLine();
+                Console.Write("Password: ");
+                user.Password = Console.ReadLine();
+
+                Console.WriteLine("User registered successfully!");
+                return true;
+            }
+
+            if (UserRegistration() == true)
+            {
+                _users.Add(user);
+            }
+            else
+            {
+                throw new ArgumentNullException("User not registered");
+            }
+
         }
 
         public void ListAllUsers()
@@ -90,6 +118,7 @@ namespace biblioteca_console_csharp.Services
             int newId = _users.Count + 1;
             Console.WriteLine($"Generated User ID: {newId}");
         }
+
 
 
     }
